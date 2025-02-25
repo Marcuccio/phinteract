@@ -1,0 +1,13 @@
+[Unit]
+Description=Simple Web Server HTTP
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/phinteract/phinteract.py
+Restart=always
+User=nobody
+Group=nogroup
+WorkingDirectory=/opt/phinteract
+
+[Install]
+WantedBy=multi-user.target
