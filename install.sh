@@ -8,6 +8,7 @@ sudo chmod +x /opt/phinteract/phinteract.py
 # Crea il file di log
 sudo touch /var/log/phinteract.csv
 sudo chmod 666 /var/log/phinteract.csv
+sudo cp -s /var/log/phinteract.csv ./phinteract.csv
 
 # Copia il file di servizio systemd
 sudo cp phinteract.service /etc/systemd/system/
