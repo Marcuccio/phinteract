@@ -16,6 +16,7 @@ if not os.path.exists(LOG_FILE):
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
+        print(self.path)
         if self.path in WHITELISTED_PATHS:
             timestamp = datetime.now()
             client_ip = self.client_address[0]
@@ -26,7 +27,8 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
             with open(LOG_FILE, mode='a', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow([timestamp, client_ip, user_agent, path])
-
+        else:
+            print(f"{self.path} skipped")
         self.send_response(200)
         self.end_headers()
         self.wfile.write(b"OK")
