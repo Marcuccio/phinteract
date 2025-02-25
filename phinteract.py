@@ -1,4 +1,5 @@
 import http.server
+from urllib.parse import urlparse
 import socketserver
 import csv
 import os
@@ -16,8 +17,10 @@ if not os.path.exists(LOG_FILE):
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
-        print(self.path)
-        if self.path in WHITELISTED_PATHS:
+        url_path = urlparse(self.path).path
+        print(url_path)
+
+        if url_path in WHITELISTED_PATHS:
             timestamp = datetime.now()
             client_ip = self.client_address[0]
             user_agent = self.headers.get('User-Agent', '-')
