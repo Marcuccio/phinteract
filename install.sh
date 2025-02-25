@@ -1,13 +1,15 @@
 #!/bin/bash
 
+sudo systemctl stop phinteract
+sudo mv /var/log/phinteract.csv /var/log/phinteract.csv.bck
+
 # Crea la directory per il server
 sudo mkdir -p /opt/phinteract
 sudo cp phinteract.py /opt/phinteract/
 sudo chmod +x /opt/phinteract/phinteract.py
 
 # Crea il file di log
-sudo touch /var/log/phinteract.csv
-sudo chmod 666 /var/log/phinteract.csv
+sudo touch /var/log/phinteract.csv && sudo chmod 666 /var/log/phinteract.csv
 sudo cp -s /var/log/phinteract.csv ./phinteract.csv
 
 # Copia il file di servizio systemd
