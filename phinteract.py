@@ -21,24 +21,29 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
         print(url_path)
 
         if url_path in WHITELISTED_PATHS:
-            timestamp = datetime.now()
-            client_ip = self.client_address[0]
-            user_agent = self.headers.get('User-Agent', '-')
-            path = self.path
-
-            print(f"[!!] {timestamp} - {client_ip} - {user_agent} - {path}")
-            with open(LOG_FILE, mode='a', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow([timestamp, client_ip, user_agent, path])
+            self.log_phishing_interacion()
+            
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"OK\n")
         else:
-            print(f"{self.path} skipped")
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b"OK")
-        
+            self.send_response(404)
+            self.end_headers()
+            self.wfile.write(b"Not Found\n")
+
+    def log_phishing_interacion(self):
+        timestamp = datetime.now()
+        client_ip = self.client_address[0]
+        user_agent = self.headers.get('User-Agent', '-')
+        path = self.path
+
+        print(f"[!!] {timestamp} - {client_ip} - {user_agent} - {path}")
+        with open(LOG_FILE, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([timestamp, client_ip, user_agent, path])
 
 if __name__ == "__main__":
-    print(f"see log at: {LOG_FILE}")
+    print(f"[INFO] see log at: {LOG_FILE}")
     with socketserver.TCPServer(("", PORT), CustomHandler) as httpd:
         print(f"[*] Server running on port {PORT}...")
         httpd.serve_forever()
