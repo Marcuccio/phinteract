@@ -17,21 +17,19 @@ if not os.path.exists(LOG_FILE):
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path in WHITELISTED_PATHS:
-            self.log_phishing_interaction()
+            timestamp = datetime.now()
+            client_ip = self.client_address[0]
+            user_agent = self.headers.get('User-Agent', '-')
+            path = self.path
+
+            print(f"[!!] {timestamp} - {client_ip} - {user_agent} - {path}")
+            with open(LOG_FILE, mode='a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow([timestamp, client_ip, user_agent, path])
+
         self.send_response(200)
         self.end_headers()
         self.wfile.write(b"OK")
-
-    def log_phishing_interaction(self):
-        timestamp = datetime.now()
-        client_ip = self.client_address[0]
-        user_agent = self.headers.get('User-Agent', '-')
-        path = self.path
-
-        print(f"{timestamp} - {client_ip} - {user_agent} - {path}")
-        with open(LOG_FILE, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([timestamp, client_ip, user_agent, path])
         
 
 if __name__ == "__main__":
