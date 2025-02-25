@@ -16,6 +16,6 @@ sudo systemctl enable phinteract
 sudo systemctl start phinteract
 
 # Imposta la rotazione dei log
-sudo cp phinteract.logrotate /etc/logrotate.d/phinteract
+# sudo cp phinteract.logrotate /etc/logrotate.d/phinteract
 
 echo "Installazione completata! Il server è in esecuzione."
