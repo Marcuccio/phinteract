@@ -17,12 +17,12 @@ if not os.path.exists(LOG_FILE):
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path in WHITELISTED_PATHS:
-            self.log_request()
+            self.log_phishing_interaction()
         self.send_response(200)
         self.end_headers()
         self.wfile.write(b"OK")
 
-    def log_request(self, code="-", size="-"):
+    def log_phishing_interaction(self):
         timestamp = datetime.now()
         client_ip = self.client_address[0]
         user_agent = self.headers.get('User-Agent', '-')
